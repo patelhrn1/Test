@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MySample" basedir="." default="all">
+
+	<property file="build.properties"/>
+
+	<tstamp>
+		<format property="today" pattern="ddMMyyyy" locale="en,GB"/>
+	</tstamp>
+
+	<target name="clean">
+		<delete dir="Hiren_${today}" />
+	</target>
+
+	<target name="checkdir">
+		<condition property="availability">
+			<available file="Hiren_${today}" type="dir" />
+		</condition>
+		<antcall target="diravailable" />
+		<antcall target="dirnotavailable" />
+	</target>
+
+	<target name="diravailable" if="availability">
+		<echo>
+			"Directory is Available"
+		</echo>
+	</target>
+
+	<target name="dirnotavailable" unless="availability">
+		<echo>
+			"Directory is Not Available"
+		</echo>
+	</target>
+
+	<target name="create">
+		<mkdir dir="Hiren_${today}" />
+	</target>
+
+	<target name="copy">
+		<copy todir="${dest}\Hiren_${today}">
+			<fileset dir="${src}\Resume">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="zip">
+		<zip destfile="${dest}\Hiren_${today}.zip"
+		 basedir="${dest}\Hiren_${today}"
+		/>
+	</target>
+	
+	<target name="CreateJar">
+		<jar destfile="${dest}\Hiren_${today}.jar" basedir="${dest}\Hiren_${today}">
+			<exclude name="*.docx"/>
+		</jar>
+	</target>
+	<target name="all" depends=" clean, checkdir, create, copy, zip, CreateJar "></target>
+	
+	<target name="shutdown">
+		<exec executable="C:\apache\Tomcat\bin\startup.bat">
+   
+		</exec>
+	</target>
+	
+	
+</project>
